@@ -25,6 +25,29 @@ public class ScheduleJobController {
         return "Hello World";
     }
 
+    /**
+     * {
+     *     "parameters": [
+     *         {
+     *             "key":"other",
+     *             "values": ["var_1", "var_2"]
+     *         },
+     *         {
+     *             "key":"occurrence",
+     *             "values": ["TYPE_1"]
+     *         },
+     *         {
+     *             "key":"occurrenceDetails",
+     *             "values": [
+     *                 {
+     *                      "variable1": "value1",
+     *                      "variable2": "value2"
+     *                 }
+     *             ]
+     *         }
+     *     ]
+     * }
+     */
     @PostMapping("/test-complex-object")
     public ResponseEntity<String> testComplexObject(@RequestBody final RequestWrapperDTO wrapper) {
         System.out.println(wrapper);

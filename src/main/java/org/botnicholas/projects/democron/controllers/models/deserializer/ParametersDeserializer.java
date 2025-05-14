@@ -1,0 +1,59 @@
+package org.botnicholas.projects.democron.controllers.models.deserializer;
+
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.botnicholas.projects.democron.controllers.models.ParameterDTO;
+import org.botnicholas.projects.democron.controllers.models.SoneObjectA;
+import org.botnicholas.projects.democron.controllers.models.SoneObjectB;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ParametersDeserializer extends StdDeserializer<List<ParameterDTO>> {
+    protected ParametersDeserializer() {
+        this(ParameterDTO.class);
+    }
+
+    protected ParametersDeserializer(Class<?> vc) {
+        super(vc);
+    }
+
+    @Override
+    public List<ParameterDTO> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+        ObjectMapper mapper = (ObjectMapper) p.getCodec();
+        JsonNode tree = mapper.readTree(p);
+        String type = "";
+        List<ParameterDTO> result = new ArrayList<>();
+
+        if(tree.isArray()) {
+            for (JsonNode parameter: tree) {
+                var key = parameter.get("key");
+                var value = parameter.get("values");
+
+                if (!key.textValue().equals("occurrenceDetails")) {
+                    if(key.textValue().equals("occurrence")) {
+                        type = parameter.get("values").get(0).textValue();
+                    }
+                    result.add(new ParameterDTO(key.textValue(), mapper.convertValue(parameter.get("values"), new TypeReference<List<Object>>() {})));
+                } else {
+                    switch (type) {
+                        case "TYPE_1":
+                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.convertValue(parameter.get("values").get(0), SoneObjectA.class))));
+                            break;
+                        case "TYPE_2":
+                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.convertValue(parameter.get("values").get(0), SoneObjectB.class))));
+                            break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
