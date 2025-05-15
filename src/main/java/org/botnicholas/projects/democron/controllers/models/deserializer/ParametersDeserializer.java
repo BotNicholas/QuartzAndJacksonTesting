@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class ParametersDeserializer extends StdDeserializer<List<ParameterDTO>> {
     protected ParametersDeserializer() {
@@ -30,20 +31,18 @@ public class ParametersDeserializer extends StdDeserializer<List<ParameterDTO>> 
     public List<ParameterDTO> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
         ObjectMapper mapper = (ObjectMapper) p.getCodec();
         JsonNode tree = mapper.readTree(p);
-        String type = "";
         List<ParameterDTO> result = new ArrayList<>();
 
         if(tree.isArray()) {
             for (JsonNode parameter: tree) {
                 var key = parameter.get("key");
+                var azazaz = parameter.get("azazaz");
                 var value = parameter.get("values");
 
                 if (!key.textValue().equals("occurrenceDetails")) {
-                    if(key.textValue().equals("occurrence")) {
-                        type = parameter.get("values").get(0).textValue();
-                    }
                     result.add(new ParameterDTO(key.textValue(), mapper.convertValue(parameter.get("values"), new TypeReference<List<String>>() {})));
                 } else {
+                    var type = findOccurrence(tree).map(n -> n.get("values").get(0).textValue()).orElse(null);
                     switch (type) {
                         case "DAILY":
                             var daily = mapper.treeToValue(parameter.get("values").get(0), SoneObjectA.class);
@@ -58,6 +57,15 @@ public class ParametersDeserializer extends StdDeserializer<List<ParameterDTO>> 
             }
         }
         return result;
+    }
+
+    private Optional<JsonNode> findOccurrence(JsonNode tree) {
+        for (JsonNode parameter: tree) {
+            if (parameter.get("key").textValue().equals("occurrence")) {
+                return Optional.of(parameter);
+            }
+        }
+        return Optional.empty();
     }
 
 //    FOR OBJECTS OR STRINGS

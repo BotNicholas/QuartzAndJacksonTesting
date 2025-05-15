@@ -54,9 +54,9 @@ public class ScheduleJobController {
      * }
      */
     @PostMapping("/test-complex-object")
-    public ResponseEntity<String> testComplexObject(@RequestBody final RequestWrapperDTO wrapper) {
+    public ResponseEntity<RequestWrapperDTO> testComplexObject(@RequestBody final RequestWrapperDTO wrapper) {
         System.out.println(wrapper);
-        return ResponseEntity.ok("Received");
+        return ResponseEntity.ok(wrapper);
     }
 
     @PostMapping("/schedule/every/hour")
