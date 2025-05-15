@@ -1,13 +1,33 @@
 package org.botnicholas.projects.democron.controllers.models;
 
-public class SoneObjectA {
-    private String variable1;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public String getVariable1() {
-        return variable1;
+public class SoneObjectA {
+    private String time;
+    private int day;
+    private String zone;
+
+    public String getTime() {
+        return time;
     }
 
-    public void setVariable1(String variable1) {
-        this.variable1 = variable1;
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 }

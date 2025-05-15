@@ -4,12 +4,12 @@ import java.util.List;
 
 public class ParameterDTO {
     private String key;
-    private List<Object> values;
+    private List<String> values;
 
     public ParameterDTO() {
     }
 
-    public ParameterDTO(String key, List<Object> values) {
+    public ParameterDTO(String key, List<String> values) {
         this.key = key;
         this.values = values;
     }
@@ -22,11 +22,11 @@ public class ParameterDTO {
         this.key = key;
     }
 
-    public List<Object> getValues() {
+    public List<String> getValues() {
         return values;
     }
 
-    public void setValues(List<Object> values) {
+    public void setValues(List<String> values) {
         this.values = values;
     }
 

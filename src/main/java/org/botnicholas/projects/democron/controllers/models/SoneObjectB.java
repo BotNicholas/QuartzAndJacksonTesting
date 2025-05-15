@@ -1,22 +1,22 @@
 package org.botnicholas.projects.democron.controllers.models;
 
 public class SoneObjectB {
-    private String variable1;
-    private String variable2;
+    private int range;
+    private String zone;
 
-    public String getVariable1() {
-        return variable1;
+    public int getRange() {
+        return range;
     }
 
-    public void setVariable1(String variable1) {
-        this.variable1 = variable1;
+    public void setRange(int range) {
+        this.range = range;
     }
 
-    public String getVariable2() {
-        return variable2;
+    public String getZone() {
+        return zone;
     }
 
-    public void setVariable2(String variable2) {
-        this.variable2 = variable2;
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 }

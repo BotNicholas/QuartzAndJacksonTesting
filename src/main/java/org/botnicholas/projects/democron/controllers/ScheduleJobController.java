@@ -33,15 +33,20 @@ public class ScheduleJobController {
      *             "values": ["var_1", "var_2"]
      *         },
      *         {
+     *             "key":"other_object",
+     *             "values": ["{'p':'v';}"]
+     *         },
+     *         {
      *             "key":"occurrence",
-     *             "values": ["TYPE_1"]
+     *             "values": ["DAILY"]
      *         },
      *         {
      *             "key":"occurrenceDetails",
      *             "values": [
      *                 {
-     *                      "variable1": "value1",
-     *                      "variable2": "value2"
+     *                      "time": "10:30",
+     *                      "day": 1,
+     *                      "zone": "Europe/Paris"
      *                 }
      *             ]
      *         }

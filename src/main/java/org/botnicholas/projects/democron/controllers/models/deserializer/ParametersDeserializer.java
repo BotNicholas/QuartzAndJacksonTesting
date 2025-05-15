@@ -14,6 +14,7 @@ import org.botnicholas.projects.democron.controllers.models.SoneObjectB;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ParametersDeserializer extends StdDeserializer<List<ParameterDTO>> {
@@ -41,14 +42,16 @@ public class ParametersDeserializer extends StdDeserializer<List<ParameterDTO>> 
                     if(key.textValue().equals("occurrence")) {
                         type = parameter.get("values").get(0).textValue();
                     }
-                    result.add(new ParameterDTO(key.textValue(), mapper.convertValue(parameter.get("values"), new TypeReference<List<Object>>() {})));
+                    result.add(new ParameterDTO(key.textValue(), mapper.convertValue(parameter.get("values"), new TypeReference<List<String>>() {})));
                 } else {
                     switch (type) {
-                        case "TYPE_1":
-                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.convertValue(parameter.get("values").get(0), SoneObjectA.class))));
+                        case "DAILY":
+                            var daily = mapper.treeToValue(parameter.get("values").get(0), SoneObjectA.class);
+                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.writeValueAsString(daily))));
                             break;
-                        case "TYPE_2":
-                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.convertValue(parameter.get("values").get(0), SoneObjectB.class))));
+                        case "EVERY_HOUR":
+                            var everyHour = mapper.treeToValue(parameter.get("values").get(0), SoneObjectB.class);
+                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.writeValueAsString(everyHour))));
                             break;
                     }
                 }
@@ -56,4 +59,40 @@ public class ParametersDeserializer extends StdDeserializer<List<ParameterDTO>> 
         }
         return result;
     }
+
+//    FOR OBJECTS OR STRINGS
+//
+//    @Override
+//    public List<ParameterDTO> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+//        ObjectMapper mapper = (ObjectMapper) p.getCodec();
+//        JsonNode tree = mapper.readTree(p);
+//        String type = "";
+//        List<ParameterDTO> result = new ArrayList<>();
+//
+//        if(tree.isArray()) {
+//            for (JsonNode parameter: tree) {
+//                var key = parameter.get("key");
+//                var value = parameter.get("values");
+//
+//                if (!key.textValue().equals("occurrenceDetails")) {
+//                    if(key.textValue().equals("occurrence")) {
+//                        type = parameter.get("values").get(0).textValue();
+//                    }
+//                    result.add(new ParameterDTO(key.textValue(), Collections.singletonList(mapper.convertValue(parameter.get("values"), new TypeReference<List<String>>() {
+//                    }))));
+//                } else {
+//                    switch (type) {
+//                        case "DAILY":
+////                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.convertValue(parameter.get("values").get(0), SoneObjectA.class))));
+//                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.treeToValue(parameter.get("values").get(0), SoneObjectA.class))));
+//                            break;
+//                        case "EVERY_HOUR":
+//                            result.add(new ParameterDTO(key.textValue(), List.of(mapper.convertValue(parameter.get("values").get(0), SoneObjectB.class))));
+//                            break;
+//                    }
+//                }
+//            }
+//        }
+//        return result;
+//    }
 }
